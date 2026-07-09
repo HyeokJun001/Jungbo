@@ -306,7 +306,7 @@ function renderQuiz(){
   const input = document.getElementById("ans");
   const submit = () => submitAnswer();
   document.getElementById("submit").addEventListener("click", submit);
-  input.addEventListener("keydown", e => { if(e.key==="Enter" && !S.answered) submit(); });
+  input.addEventListener("keydown", e => { if(e.key==="Enter" && !S.answered){ e.stopPropagation(); submit(); } });
   if(!S.answered) input.focus();
 
   document.getElementById("hintBtn").addEventListener("click", showHint);
@@ -602,6 +602,23 @@ function renderBookmark(){
 }
 
 function escapeHtml(s){ return (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// ---- 전역 단축: Enter / 마우스 뒤로가기 버튼 = 다음 ----
+// 답을 제출했고(=결과 표시), 다음 버튼이 활성일 때만 넘어감(벌칙 3번쓰기 중엔 잠겨 있어 무시)
+function advanceIfReady(){
+  const nx = document.getElementById("next");
+  if(sessionState && sessionState.answered && nx && !nx.disabled){ nx.click(); return true; }
+  return false;
+}
+document.addEventListener("keydown", e => {
+  if(e.key === "Enter" && advanceIfReady()) e.preventDefault();
+});
+// 마우스 뒤로가기 버튼 → popstate로 잡아 '다음'으로. 페이지 이탈은 막음.
+try { history.pushState(null, ""); } catch(_) {}
+window.addEventListener("popstate", () => {
+  try { history.pushState(null, ""); } catch(_) {}
+  advanceIfReady();
+});
 
 // 시작
 renderHome();
