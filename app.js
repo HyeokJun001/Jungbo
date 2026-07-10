@@ -282,7 +282,7 @@ function renderQuiz(){
     <label class="penalty-toggle"><input type="checkbox" id="penaltyChk" ${penaltyOn()?"checked":""}/>
       <span class="track"></span> ✍️ 틀리면 정답 3번 쓰기</label>
     <div class="qcard">
-      <span class="chip">${q.sector} · ${q.theme}</span>
+      <span class="chip">${q.sector}</span>
       <p class="qtext" id="qtext">${escapeHtml(q.q)}</p>
       <div class="answer-row">
         <input id="ans" placeholder="정답을 입력하세요" autocomplete="off" ${S.answered?"disabled":""}/>
